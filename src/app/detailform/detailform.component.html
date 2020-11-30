@@ -1,0 +1,186 @@
+<div class="container-fluid">
+    <p>{{detail|json}}</p>
+    <div class="form-group">
+        <div class="form-row">
+            <label>Event Title</label>
+            <input class="form-control" [(ngModel)]="detail.event_title">
+        </div>
+        <div class="form-row">
+            <label>About</label>
+            <input [(ngModel)]="detail.about" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-row">
+            <div class="custom-control custom-radio custom-control-inline">
+                    <input [(ngModel)]="detail.partner_type" type="radio" value="individual" name="partner_type">
+                    <label class="custom-control-label" for="customRadioInline1">Individual</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+                <input [(ngModel)]="detail.partner_type" type="radio" value="organization" name="partner_type">
+                <label class="custom-control-label" for="customRadioInline2">Business</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+                    <input [(ngModel)]="detail.partner_type" type="radio" value="college" name="partner_type">
+                    <label class="custom-control-label" for="customRadioInline2">College</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+                    <input [(ngModel)]="detail.partner_type" type="radio" value="other" name="partner_type">
+                    <label class="custom-control-label" for="customRadioInline2">Other</label>
+            </div>
+        </div>
+        <div class="form-group-contact-1">
+            <div class="form-group">
+                    <label for="contact-1-name">Primary Contact</label>
+                    <div class="form-row">
+                        <label for="name">Name</label>
+                        <input type="text" placeholder="Name" (blur)="onContact1()" [(ngModel)]="temp_contact_1.name">
+                    </div>
+                    <div class="form-row">
+                        <label for="name">Email</label>
+                        <input type="text" placeholder="Email" (blur)="onContact1()" [(ngModel)]="temp_contact_1.email">
+                    </div>
+                    <div class="form-row">
+                        <label for="name">Phone Number</label>
+                        <input type="tel" placeholder="Phone Number" (blur)="onContact1()" [(ngModel)]="temp_contact_1.phone_no">
+                    </div>
+            </div>
+            <div class="form-row">
+                <div class="custom-control custom-radio custom-control-inline">
+                    <label>Do You Have A Secondary Contact</label>
+                    <input [(ngModel)]="is_contact_2" type="radio" value=true>
+                    <label class="custom-control-label" for="customRadioInline2">Yes</label>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="ifSecondContact()">
+                <label for="contact-2-name">Secondary Contact</label>
+                <div class="form-row">
+                    <label for="name">Name</label>
+                    <input type="text" placeholder="Name" (blur)="onContact2()" [(ngModel)]="temp_contact_2.name">
+                </div>
+                <div class="form-row">
+                    <label for="name">Email</label>
+                    <input type="text" placeholder="Email" (blur)="onContact2()" [(ngModel)]="temp_contact_2.email">
+                </div>
+                <div class="form-row">
+                    <label for="name">Phone Number</label>
+                    <input type="tel" placeholder="Phone Number" (blur)="onContact2()" [(ngModel)]="temp_contact_2.phone_no">
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="custom-control custom-radio custom-control-inline">
+                <input [(ngModel)]="detail.website_url" type="text" placeholder="Website Link" name="website_url">
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+                <input [(ngModel)]="detail.facebook_url" type="text" value="organization" placeholder="Facebook Link">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="custom-control custom-radio custom-control-inline">
+                <input [(ngModel)]="detail.twitter_url" type="text" placeholder="Twitter Link">
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+                <input [(ngModel)]="detail.instagram_url" type="text" placeholder="Instagram Link">
+            </div>
+        </div>
+    </div>
+    <!--Colleges-->
+    <div class="form-group" *ngIf="collegeNameExists()">
+        <div class="form-row">
+            <label>Name Of College</label>
+            <input [(ngModel)]="lead.college_name" type="text" class="form-control" placeholder="Name Of College">
+        </div>
+        <div class="form-group">
+            <label for="college activity">College Activity</label>
+            <mat-select class="form-control" [(ngModel)]="detail.college_activity" name="college_activity">
+                <mat-option *ngFor = "let activity of college_activities" [value]="activity.json_name">{{activity.name}}</mat-option>
+            </mat-select>
+        </div>
+    </div>
+    <!--Music Contest-->
+    <div class="form-group" *ngIf="collegeNameExists()">
+        <div class="form-row">
+            <label for="music contest type">Type Of Music Contest</label>
+            <mat-select class='form-control' [(ngModel)]="detail.college_music_contest" id="selectActivity" name="colege_music_contest">
+                <ng-container>
+                    <mat-option selected disabled> Type Of Music Contest Event </mat-option>
+                    <mat-option *ngFor = "let activity of college_music_contest" [value]="activity.json_name">{{activity.name}}</mat-option>
+                </ng-container>  
+            </mat-select>
+        </div>
+    </div>
+    <!--College Festival-->
+    <div class="form-group">
+        <div class="form-row">
+            <label for="event_city">Event City</label>
+            <input [(ngModel)]="detail.event_city" class="form-control" required>
+        </div>
+        <div class="form-row">
+            <label for="language">Language</label>
+            <mat-select multiple class="form-control" [(ngModel)]="temp_language" (closed)="addLanguage()"> 
+                <mat-option class="form-control" *ngFor="let language of languages" [value]="language.json_name">{{language.name}}</mat-option>
+            </mat-select>
+        </div>
+        <div class="form-row">
+            <label for="genre">Genre</label>
+            <mat-select multiple class="form-control" [(ngModel)]="temp_genre" (closed)="addGenre()"> 
+                <mat-option class="form-control" *ngFor="let genre of genres" [value]="genre.json_name">{{genre.name}}</mat-option>
+            </mat-select>
+        </div>
+        <div class="form-row">
+            <label for="genre">Budget</label>
+            <mat-select class="form-control" [(ngModel)]="detail.budget"> 
+                <mat-option class="form-control" *ngFor="let bud of budgets" [value]="bud.json_name">{{bud.name}}</mat-option>
+            </mat-select>
+        </div>
+        <div class="form-row">
+            <label for="event_city">Number Of Artists</label>
+            <input type="number" [(ngModel)]="detail.number_of_artists" class="form-control" required>
+        </div>
+    </div>
+    <!-- <div class="form-group">
+        <div class="form-group">
+            <div class="form-row">
+                <label for="event_city">Number Of Artists</label>
+                <input type="number" [(ngModel)]="detail.number_of_artists" class="form-control" required>
+            </div>
+            <div class="form-row">
+                <label for="language">Language</label>
+                <mat-select multiple class="form-control" [(ngModel)]="temp_language" (closed)="addLanguage()"> 
+                    <mat-option class="form-control" *ngFor="let language of languages" [value]="language.json_name">{{language.name}}</mat-option>
+                </mat-select>
+            </div>
+            <div class="form-row">
+                <label for="genre">Genre</label>
+                <mat-select multiple class="form-control" [(ngModel)]="temp_genre" (closed)="addGenre()"> 
+                    <mat-option class="form-control" *ngFor="let genre of genres" [value]="genre.json_name">{{genre.name}}</mat-option>
+                </mat-select>
+            </div>
+        </div>
+    </div> -->
+    <div class="form-group">
+        <div class="form-row">
+            <label for="opportunity-category">Opportunity Category</label>
+            <input type="text" class="form-control" [(ngModel)]="detail.opportunity_category">
+        </div>
+        <div class="form-row">
+            <label for="opportunity-category">Offering</label>
+            <input type="text" class="form-control" [(ngModel)]="detail.offering">
+        </div>
+        <div class="form-row">
+            <label for="opportunity-category">Is The Opportunity Recurring?</label>
+            <mat-select type="number" class="form-control" [(ngModel)]="detail.if_recurring">
+                <mat-option class="form-control" [value]="true">Yes</mat-option>
+                <mat-option class="form-control" [value]="false">No</mat-option>
+            </mat-select>
+        </div>
+        <div class="form-row">
+            <label for="recurring-frequency">Recurring Frequency</label>
+            <mat-select multiple class="form-control" [(ngModel)]="temp_genre"> 
+                <mat-option class="form-control" *ngFor="let freq of frequency" [value]="freq.json_name">{{freq.name}}</mat-option>
+            </mat-select>
+        </div>
+    </div>
+    <button (click)="onClickBtn()">Click</button>
+</div>

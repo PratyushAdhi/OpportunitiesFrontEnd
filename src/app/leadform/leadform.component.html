@@ -1,0 +1,168 @@
+<div class="container-fluid">
+    <div class="form-group">
+        <div class="form-row">
+            <label>Name</label>
+            <input class="form-control" [(ngModel)]="lead.name">
+        </div>
+        <div class="form-row">
+            <label> Email </label>
+            <input class="form-control" [(ngModel)]="lead.email">
+        </div>
+        <div class="form-row">
+            <label> Phone Number </label>
+            <input class="form-control" [(ngModel)]="lead.phone_no">
+        </div>
+        <div class="form-row">
+            <label> City </label>
+            <input class="form-control" [(ngModel)]="lead.city">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-row">
+            <div class="custom-control custom-radio custom-control-inline">
+                <input [(ngModel)]="lead.partner_type" type="radio" value="individual" name="partner_type">
+                <label class="custom-control-label" for="customRadioInline1">Individual</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+                <input [(ngModel)]="lead.partner_type" type="radio" value="organization" name="partner_type">
+                <label class="custom-control-label" for="customRadioInline2">Business</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+                <input [(ngModel)]="lead.partner_type" type="radio" value="college" name="partner_type">
+                <label class="custom-control-label" for="customRadioInline2">College</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+                <input [(ngModel)]="lead.partner_type" type="radio" value="other" name="partner_type">
+                <label class="custom-control-label" for="customRadioInline2">Other</label> 
+            </div>
+        </div>
+        <div class="form-row">
+            <label>Opportunity/Event Name</label>
+            <input [(ngModel)]="lead.event_title" class="form-control">
+        </div>
+    </div>
+    <!--Organizations-->
+    <div *ngIf="showOrganization()"class="form-group">
+        <div class="form-row">
+            <label>Name Of Organization</label>
+            <input [(ngModel)]="lead.org_name" class="form-control">
+        </div>
+    </div>
+    <div *ngIf="notCollege()">
+        <label> Your Businness </label>
+        <div class="form-row">
+            <mat-select multiple class="form-control" [(ngModel)]="temp_business" (closed)="addBusiness()"> 
+                <mat-option class="form-control" *ngFor="let business of businesses" [value]="business.json_name">{{business.name}}</mat-option>
+            </mat-select>
+        </div>
+    </div>
+    <div class="form-group" *ngIf="notCollege()">
+        <div class="form-row">
+            <label>Activity For Which You Would Like To Work With Songdew</label>
+            <mat-select class="form-control" [(ngModel)]="lead.activity">
+                <mat-option class="form-control" *ngFor="let activity of activities" [value]="activity.json_name">{{activity.name}}</mat-option>
+            </mat-select>
+        </div>
+    </div>
+    <!--Colleges-->
+    <div class="form-group" *ngIf="showCollege()">
+        <div class="form-row">
+            <label for="college"> College</label>
+            <label>Name Of College</label>
+            <input [(ngModel)]="lead.college_name" type="text" class="form-control" placeholder="Name Of College">
+        </div>
+        <div class="form-group">
+            <label for="college activity">College Activity</label>
+            <mat-select class="form-control" [(ngModel)]="lead.college_activity" name="college_activity">
+                <mat-option *ngFor = "let activity of college_activities" [value]="activity.json_name">{{activity.name}}</mat-option>
+            </mat-select>
+        </div>
+    </div>
+    <!--Music Contest-->
+    <div class="form-group" *ngIf="showMusicContest()">
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label for="validationServer01">Date Of Event</label>
+                <input [(ngModel)]="lead.date_of_event" type="date" class="form-control">
+            </div>
+        </div>
+        <div class="form-row">
+            <label for="music contest type">Type Of Music Contest</label>
+            <mat-select class='form-control' [(ngModel)]="lead.college_music_contest" id="selectActivity" name="colege_music_contest">
+                <ng-container>
+                    <mat-option selected disabled> Type Of Music Contest Event </mat-option>
+                    <mat-option *ngFor = "let activity of college_music_contest" [value]="activity.json_name">{{activity.name}}</mat-option>
+                </ng-container>  
+            </mat-select>
+        </div>
+    </div>
+    <!--College Festival-->
+    <div class="form-group" *ngIf="showCollegeFestival()">
+        <label for="performanceCity">Bands/Artists For Music Events</label>
+        <div class="form-row">
+            <label for="validationServer01">Date Of Event</label>
+            <input [(ngModel)]="lead.date_of_event" type="datetime-local" class="form-control" id="validationServer01" required>
+        </div>
+        <div class="form-row">
+            <label for="event_city">Event City</label>
+            <input [(ngModel)]="lead.event_city" class="form-control" required>
+        </div>
+        <div class="form-row">
+            <label for="language">Language</label>
+            <mat-select multiple class="form-control" [(ngModel)]="temp_language" (closed)="addLanguage()"> 
+                <mat-option class="form-control" *ngFor="let language of languages" [value]="language.json_name">{{language.name}}</mat-option>
+            </mat-select>
+        </div>
+        <div class="form-row">
+            <label for="genre">Genre</label>
+            <mat-select multiple class="form-control" [(ngModel)]="temp_genre" (closed)="addGenre()"> 
+                <mat-option class="form-control" *ngFor="let genre of genres" [value]="genre.json_name">{{genre.name}}</mat-option>
+            </mat-select>
+        </div>
+        <div class="form-row">
+            <label for="genre">Budget</label>
+            <mat-select class="form-control" [(ngModel)]="lead.budget"> 
+                <mat-option class="form-control" *ngFor="let bud of budgets" [value]="bud.json_name">{{bud.name}}</mat-option>
+            </mat-select>
+        </div>
+    </div>
+    <div class="form-group" *ngIf="showGigs()">
+        <div class="form-group">
+            <label for="performanceCity">Bands/Artists For Music Events</label>
+            <div class="form-row">
+                <label for="validationServer01">Date Of Event</label>
+                <input [(ngModel)]="lead.date_of_event" type="datetime-local" class="form-control" id="validationServer01" required>
+            </div>
+            <div class="form-row">
+                <label for="event_city">Event City</label>
+                <input [(ngModel)]="lead.event_city" class="form-control" required>
+            </div>
+            <div class="form-row">
+                <label for="event type">Select Event Type</label>
+                <mat-select class="form-control" [(ngModel)]="lead.gig_type">
+                    <mat-option class="form-control" *ngFor="let event of gigs" [value]="event.json_name">{{event.name}}</mat-option>
+                </mat-select>
+            </div>
+            <div class="form-row">
+                <label for="language">Language</label>
+                <mat-select multiple class="form-control" [(ngModel)]="temp_language" (closed)="addLanguage()"> 
+                    <mat-option class="form-control" *ngFor="let language of languages" [value]="language.json_name">{{language.name}}</mat-option>
+                </mat-select>
+            </div>
+            <div class="form-row">
+                <label for="genre">Genre</label>
+                <mat-select multiple class="form-control" [(ngModel)]="temp_genre" (closed)="addGenre()"> 
+                    <mat-option class="form-control" *ngFor="let genre of genres" [value]="genre.json_name">{{genre.name}}</mat-option>
+                </mat-select>
+            </div>
+            <div class="form-row">
+                <label for="genre">Budget</label>
+                <mat-select class="form-control" [(ngModel)]="lead.budget"> 
+                    <mat-option class="form-control" *ngFor="let bud of budgets" [value]="bud.json_name">{{bud.name}}</mat-option>
+                </mat-select>
+            </div>
+        </div>
+    </div>
+    <button (click)="onClickBtn()">Click</button>
+       
+</div>
