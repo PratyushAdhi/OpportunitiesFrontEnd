@@ -1,10 +1,8 @@
-import { Component, DefaultIterableDiffer, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
-import { Contact } from '../contact.model';
 import { Detail } from '../detail.model';
 import { Genre } from '../genre.model';
 import { Language } from '../language.model';
-import { Lead } from '../lead.model';
 import {DetailserviceService} from '../detailservice.service';
 
 @Component({
@@ -116,27 +114,20 @@ export class DetailformComponent implements OnInit {
     }
   ]
 
+
   detail = new Detail();
-  lead = new Lead();
-  temp_contact_1 = new Contact();
-  temp_contact_2 = new Contact();
-  temp_genre: any
-  temp_language: any
-  is_contact_2 = false;
-  language_id = [];
-  genre_id = [];
   id: number;
-
-  constructor(private api: DetailserviceService, private ActivatedRoute: ActivatedRoute) { 
-    this.detail = new Detail();
-    this.lead = new Lead();
-    this.temp_contact_1 = new Contact();
-    this.temp_contact_2 = new Contact()
-    this.is_contact_2 = false;
-    this.language_id = [];
-    this.genre_id = [];
-
-  }
+  status_type= "company";
+  temp_genre = []
+  temp_language = []
+  language_id = []
+  genre_id = []
+  urls = []
+  temp_logo: File;
+  show_urls = []
+  show_logo = "";
+  recurring = "no";
+  constructor(public ActivatedRoute: ActivatedRoute, public api: DetailserviceService) {}
 
   ngOnInit(): void {
     this.ActivatedRoute.params.subscribe(
@@ -146,17 +137,7 @@ export class DetailformComponent implements OnInit {
       }
     )
     this.getDetail(this.id);
-  }
-
-  collegeNameExists() {
-    if (this.detail.college_name) {
-      return true;
     }
-    else if (this.detail.partner_type === "college"){
-      return true;
-    }
-    return false;
-  }
 
   addLanguage(): void {
     for(var i = 0; i < this.temp_language.length; i++){
@@ -176,86 +157,81 @@ export class DetailformComponent implements OnInit {
     }
   }
 
-  trueOrFalse(): void {
-    if(this.detail.if_recurring === true){
-      this.detail.if_recurring = true;
-      return;
-    }
-    this.detail.if_recurring = false;
-  }
-
-  showCollegeFestival(){
-    return true;
-  }
-
-  showMusicContest(){
-    return true;
-  }
-
-  ifSecondContact(): boolean {
-    return this.is_contact_2;
-  }
-
-  onContact1(): void {
-    this.detail.contact_1 = this.temp_contact_1;
-  }
-
-  onContact2(): void {
-    this.detail.contact_2 = this.temp_contact_2;
-  }
-
-  showCollege(): boolean {
-    return this.detail.partner_type === "college";
-  }
-
-  showNonCollegeEvent(): boolean {
-    return true;
-  }
-  
-  onClickBtn(): void {
-    if(this.detail.contact_2){
-      if(!this.detail.contact_2.name){
-        this.detail.contact_2 = null;
-      }
-    }
-    console.log(JSON.stringify(this.detail));
-    this.api.updateDetail(this.detail, this.id).subscribe(
-      data => {
-        this.detail = data;
+  onClickBtn(): void{
+    this.api.updateDetail(this.detail, this.temp_logo, this.urls, this.id).subscribe(
+      data =>{
+        console.log(data);
+        this.status_type = "submitted";
       },
       error => {
         console.log(error);
       }
-    )
+    );
   }
+
+  onNextBtn(){
+    this.api.updateDetail(this.detail, this.temp_logo, this.urls, this.id).subscribe(
+      data =>{
+        console.log(data);
+      },
+      error => {
+        console.log(error);
+      }
+    );
+    this.status_type = "opportunity";
+
+  }
+
+  uploadFileToGallery(e) {
+    if(e.target.files){
+      for(var i = 0; i < e.target.files.length; i++){
+          var reader = new FileReader();
+          reader.readAsDataURL(e.target.files[i]);
+          reader.onload=(events:any)=>{
+            this.show_urls.push(events.target.result);
+        }
+        this.urls.push(e.target.files[i]);
+      }
+    }
+    console.log(this.show_urls);
+    console.log(this.urls);
+  }
+
+
+  uploadFileToLogo(e) {
+    if(e.target.files){
+      var reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload=(events:any)=>{
+        this.show_logo = events.target.results;
+      }
+      this.temp_logo = e.target.files[0];
+  }
+}
 
   getDetail = (id: number) => {
     this.api.getDetail(this.id).subscribe(
       data => {
         this.detail = data;
-        console.log(data["contact_1"])
-        this.temp_contact_1 = data["contact_1"]
-        if(data["contact_2"]){
-          this.is_contact_2 = true;
-          this.temp_contact_2 = data["contact_2"]
+        if(data["language_id"].length > 0){
+          var temp = []
+          for(var i = 0; i < data["language_id"].length; i++){
+            temp.push(data["language_id"][i].name)
+          }
+          this.temp_language = temp;
         }
-        var temp = []
-        for(var i = 0; i < data["language_id"].length; i++){
-          temp.push(data["language_id"][i].name)
+        if(data["genre_id"].length > 0){
+          var gen = []
+          for(var i = 0; i < data["genre_id"].length; i++){
+            gen.push(data["genre_id"][i].name)
+          }
+          this.temp_genre = gen;
         }
-        this.temp_language = temp;
-        var gen = []
-        console.log(data["genre_id"])
-        for(var i = 0; i < data["genre_id"].length; i++){
-          gen.push(data["genre_id"][i].name)
-        }
-        this.temp_genre = gen;
-        console.log(this.temp_genre)
+        this.detail.recurring_frequency = data["recurring_frequency"];
       },
       error => {
         console.log(error);
       }
-
     )
   }
 

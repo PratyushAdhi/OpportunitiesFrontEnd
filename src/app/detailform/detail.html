@@ -1,0 +1,75 @@
+<div class="container-fluid">
+    <div class="form-group">
+        <div>
+            <mat-form-field class="full_width">
+                <mat-label>Please Mention Entity Interested In Creating Opportunity</mat-label>
+                <div>
+                    <span>
+                        <mat-radio-group aria-label="Select an option" [(ngModel)]="detail.partner_type">
+                            <mat-radio-button  value="individual" [checked]="detail.partner_type === 'individual'">Individual</mat-radio-button>
+                            <mat-radio-button  value="organization" [checked]="detail.partner_type === 'organization'">Business</mat-radio-button>
+                            <mat-radio-button  value="college" [checked]="detail.partner_type === 'college'">College</mat-radio-button>
+                            <mat-radio-button  value="other" [checked]="detail.partner_type === 'other'">Other</mat-radio-button>
+                        </mat-radio-group>
+                    </span>
+                    <span>
+                        <div>
+                            <input matInput [(ngModel)]="detail.other_partner_type" type="text">
+                        </div>
+                    </span>
+                </div>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <mat-label>Name Of Entity</mat-label>
+                <input matInput [(ngModel)]="detail.org_name" type="text">
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+            <div>
+                <span>
+                    <mat-label>Facebook URL</mat-label>
+                    <input matInput [(ngModel)]="detail.facebook_url" type='text'>
+                </span>
+                <span>
+                    <mat-label>Instagram URL</mat-label>
+                    <input matInput [(ngModel)]="detail.instagram_url" type='text'>
+                </span>
+            </div>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <mat-label>Information About Entity</mat-label>
+                <p>Please mention about the business operations of the company. This information would be published along with the opportunity for the artists.
+                Hence please see that you mention what your company does andhow its services are different and unique. Please provide the information in 4-6 sentences. 
+                You may check the sample details below. 
+                </p>
+                <textarea matInput [(ngModel)] = "detail.information" name="" id="" cols="30" rows="10"></textarea>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input type="file" id="my-input" (change)="onFileSelected($event)" style="display: inline; margin: 100px;">
+            </mat-form-field>
+        </div>
+        <mat-form-field class="full_width">
+            <div>
+                <span>
+                    <mat-label>Primary Contact</mat-label>
+                    <input matInput [(ngModel)]="detail.primary_contact_name" type="text">
+                    <input matInput [(ngModel)]="detail.primary_contact_email" type="text">
+                    <input matInput [(ngModel)]="detail.primary_contact_phone" type="text">
+                </span>
+                <span>
+                    <mat-label>Secondary Contact (Optional) </mat-label>
+                    <input matInput [(ngModel)]="detail.secondary_contact_name" type="text">
+                    <input matInput [(ngModel)]="detail.secondary_contact_email" type="text">
+                    <input matInput [(ngModel)]="detail.secondary_contact_phone" type="text">
+                </span>
+            </div>
+        </mat-form-field>
+    </div>
+</div>

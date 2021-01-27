@@ -17,14 +17,9 @@
   }
   
   .radio-button {
-    margin: 5px
+    margin: 5px;
   }
-
-  .container {
-    width: 100%;
-  }
-
   
-
-
-  
+  div {
+    pointer-events: none;
+}

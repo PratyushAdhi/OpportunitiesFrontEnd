@@ -1,0 +1,167 @@
+<div class="detail-form" *ngIf="is_submitted">
+    <h1> Thank You For Your Response</h1>
+</div>
+<div class="detail-form" *ngIf="!(is_submitted)">
+    <div class="container-fluid">
+        <div class="form-group">
+            <mat-form-field class="full_width">
+                <mat-label>Event Title</mat-label>
+                <input matInput required [(ngModel)]="detail.event_title">
+            </mat-form-field>
+            <mat-form-field class="full_width">
+                <mat-label>About</mat-label>
+                <input matInput [(ngModel)]="detail.about">
+            </mat-form-field>
+            <mat-toolbar>Avatar/Logo</mat-toolbar>
+                <mat-card-content>
+                        <img src={{detail.logo}}  width="150" height="150" style="display: inline;">
+                        <input type="file" id="my-input" (change)="onFileSelected($event)" style="display: inline; margin: 100px;">
+                </mat-card-content>
+        </div>
+        <div class="form-group" class="full_width">
+            <mat-radio-group aria-label="Select an option" [(ngModel)]="detail.partner_type">
+                <mat-radio-button  value="individual" [checked]="detail.partner_type === 'individual'">Individual</mat-radio-button>
+                <mat-radio-button  value="organization" [checked]="detail.partner_type === 'organization'">Business</mat-radio-button>
+                <mat-radio-button  value="college" [checked]="detail.partner_type === 'college'">College</mat-radio-button>
+                <mat-radio-button  value="other" [checked]="detail.partner_type === 'other'">Other</mat-radio-button>
+            </mat-radio-group>
+            <div class="form-group">
+                <mat-toolbar>Primary Contact</mat-toolbar>
+                <mat-form-field class="full_width">
+                    <mat-label>Name</mat-label>
+                    <input matInput [(ngModel)]="temp_contact_1.name" (blur)="onContact1()" type="text">
+                </mat-form-field>
+                <mat-form-field class="full_width">  
+                    <mat-label>Email</mat-label>
+                    <input matInput [(ngModel)]="temp_contact_1.email" (blur)="onContact1()" type="text">
+                </mat-form-field>
+                <mat-form-field class="full_width">
+                    <mat-label>Phone Number</mat-label>
+                    <input matInput [(ngModel)]="temp_contact_1.phone_no" (blur)="onContact1()" type="text">
+                </mat-form-field>
+            </div>
+            <div class="form-group-contact-1">
+                <!-- <div class="form-group" class="full_width">
+                    <mat-radio-group aria-label="Do You Have A Secondary Contact?" [(ngModel)]="is_contact_2">
+                        <mat-radio-button value=true>Yes</mat-radio-button>
+                        <mat-radio-button value=false>No</mat-radio-button>
+                    </mat-radio-group>
+                </div> -->
+                <mat-toolbar>Secondary Contact (Optional)</mat-toolbar>
+                <mat-form-field class="full_width">
+                    <mat-label>Name</mat-label>
+                    <input matInput [(ngModel)]="temp_contact_2.name" (blur)="onContact1()" type="text">
+                </mat-form-field>
+                <mat-form-field class="full_width">  
+                    <mat-label>Email</mat-label>
+                    <input matInput [(ngModel)]="temp_contact_2.email" (blur)="onContact1()" type="text">
+                </mat-form-field>
+                <mat-form-field class="full_width">
+                    <mat-label>Phone Number</mat-label>
+                    <input matInput [(ngModel)]="temp_contact_2.phone_no" (blur)="onContact1()" type="text">
+                </mat-form-field>
+            </div>
+            <div class="form-row">
+                <mat-toolbar>Social Media</mat-toolbar>
+                <mat-form-field class="full_width">
+                    <input matInput [(ngModel)]="detail.website_url" type="text" placeholder="Website Link" name="website_url">
+                </mat-form-field>
+                <mat-form-field class="full_width">
+                    <input matInput [(ngModel)]="detail.facebook_url" type="text" placeholder="Facebook Link" name="website_url">
+                </mat-form-field>
+                <mat-form-field class="full_width">
+                    <input matInput [(ngModel)]="detail.twitter_url" type="text" placeholder="Twitter Link" name="website_url">
+                </mat-form-field>
+                <mat-form-field class="full_width">
+                    <input matInput [(ngModel)]="detail.youtube_url" type="text" placeholder="YouTube Link" name="website_url">
+                </mat-form-field>
+            </div>
+        <!--Colleges-->
+        <div class="form-group" *ngIf="showCollege()">
+            <div class="form-group">
+                <mat-toolbar>Colleges</mat-toolbar>
+                <mat-form-field class="full_width">
+                    <mat-label>Name Of College</mat-label>
+                    <input matInput [(ngModel)]="detail.college_name" placeholder="Name Of College">
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field class="full_width">
+                    <mat-label for="college activity">College Activity</mat-label>
+                    <mat-select [(ngModel)]="detail.college_activity" name="college_activity">
+                        <mat-option *ngFor = "let activity of college_activities" [value]="activity.json_name">{{activity.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <!--Music Contest-->
+        <div class="form-group" *ngIf="showMusicContest()">
+            <mat-form-field class="full_width">
+                <mat-label for="music contest type">Type Of Music Contest</mat-label>
+                <mat-select [(ngModel)]="detail.college_music_contest" id="selectActivity" name="colege_music_contest">
+                    <ng-container>
+                        <mat-option selected disabled> Type Of Music Contest Event </mat-option>
+                        <mat-option *ngFor = "let activity of college_music_contest" [value]="activity.json_name">{{activity.name}}</mat-option>
+                    </ng-container>  
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <!--College Festival-->
+        <div class="form-group">
+            <mat-form-field class="full_width">
+                <mat-label for="event_city">Event City</mat-label>
+                <input matInput [(ngModel)]="detail.event_city" class="form-control" required>
+            </mat-form-field>
+            <mat-form-field class="full_width">
+                <mat-label for="language">Language</mat-label>
+                <mat-select multiple [(ngModel)]="temp_language" (closed)="addLanguage()"> 
+                    <mat-option *ngFor="let language of languages" [value]="language.json_name">{{language.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="full_width">
+                <mat-label for="genre">Genre</mat-label>
+                <mat-select multiple [(ngModel)]="temp_genre" (closed)="addGenre()"> 
+                    <mat-option *ngFor="let genre of genres" [value]="genre.json_name">{{genre.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="full_width">
+                <mat-label for="genre">Budget</mat-label>
+                <mat-select [(ngModel)]="detail.budget"> 
+                    <mat-option *ngFor="let bud of budgets" [value]="bud.json_name">{{bud.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="full_width">
+                <mat-label for="event_city">Number Of Artists</mat-label>
+                <input matInput type="number" [(ngModel)]="detail.number_of_artists" class="form-control" required>
+            </mat-form-field>
+        </div>
+        <div class="form-group">
+            <mat-form-field class="full_width">
+                <mat-label for="opportunity-category">Opportunity Category</mat-label>
+                <input matInput type="text" [(ngModel)]="detail.opportunity_category">
+            </mat-form-field>
+            <div class="full_width">
+                <mat-form-field>
+                    <mat-label for="opportunity-category">Offering</mat-label>
+                    <input matInput type="text" [(ngModel)]="detail.offering">
+                </mat-form-field>
+            </div>
+            <div class="full_width">
+                <mat-form-field>
+                    <mat-label for="opportunity-category">Is The Opportunity Recurring?</mat-label>
+                    <mat-select type="number"  [(ngModel)]="detail.if_recurring">
+                        <mat-option  [value]="true">Yes</mat-option>
+                        <mat-option  [value]="false">No</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <mat-form-field class="full_width">
+                <mat-label for="recurring-frequency">Recurring Frequency</mat-label>
+                <mat-select [(ngModel)]="detail.recurring_frequency"> 
+                    <mat-option *ngFor="let freq of frequency" [value]="freq.json_name">{{freq.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button type="button" (click)="onClickBtn()" class="btn btn-outline-success">Submit</button>
+        </div>
+    </div>
+</div>

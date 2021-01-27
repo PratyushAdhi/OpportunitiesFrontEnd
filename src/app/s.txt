@@ -1,0 +1,96 @@
+import { Injectable , Injector} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Router, ActivatedRoute, Params} from '@angular/router';
+import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
+import { identifierModuleUrl } from '@angular/compiler';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DetailserviceService {
+  id : ""
+  base_url = "http://127.0.0.1:8000/details/"
+  create_url = this.base_url + 'create/'
+  token = localStorage.getItem('token')
+  httpHeaderNormal = new HttpHeaders({
+    'Content-type': 'application/json',
+    'authentication': `Bearer: ${this.token}`
+  })
+  httpHeaders = new HttpHeaders({
+    'Content-type': 'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW',
+    'Content-Disposition': 'attachment; filename=file',
+    'filename': 'file',
+    'Authorization': `Bearer: ${this.token}`
+  });
+
+  constructor(private http: HttpClient, private activatedRoute: ActivatedRoute, private injector: Injector) { };
+
+  getDetail(id: number): Observable<any> {
+    console.log(id);
+    return this.http.get(this.base_url + id + "/", {
+      headers: this.httpHeaders
+    })
+  }
+
+  updateDetail(detail, id, fileToUpload): Observable<any> {
+    const endpoint = this.base_url + id + "/";
+    if (fileToUpload) {
+      const formData: FormData = new FormData();
+      formData.append('logo', fileToUpload, fileToUpload.name);
+      console.log(formData);
+      this.http.put(endpoint, formData).subscribe( 
+        res => {
+          console.log(res);
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    }
+
+    return this.http.put(endpoint, detail, {
+      headers: this.httpHeaderNormal
+    });
+  }
+
+  getAllDetails(status): Observable<any> {
+    if(status === "published"){
+      return this.http.get("http://127.0.0.1:8000/details/published/", {
+        headers: this.httpHeaders
+      })
+    }
+    else if(status === "unpublished"){
+      return this.http.get("http://127.0.0.1:8000/details/unpublished/", {
+        headers: this.httpHeaders
+      })
+    }
+    else {
+      return this.http.get("http://127.0.0.1:8000/details/unverified/", {
+        headers: this.httpHeaders
+      })
+    }
+  }
+
+  ToggleDetailPublish(id) {
+    return this.http.post(this.base_url + "toggle/" + id + "/", {
+      headers: this.httpHeaders
+    })
+  }
+
+  // postFile(fileToUpload: File, formData: FormData): Observable<boolean> {
+  //   const endpoint = ;
+  //   formData.append('my-input', fileToUpload, fileToUpload.name);
+  //   return this.http.put(endpoint, formData, { headers: this.httpHeaders})
+  //     .map(() => { return true; })
+  //     .catch((e) => console.log(e)); 
+  // }
+
+//   postFile(fileToUpload: File): Observable<boolean> {
+//     const endpoint = 'your-destination-url';
+//     const formData: FormData = new FormData();
+//     formData.append('logo', fileToUpload, fileToUpload.name);
+//     return this.http.post(endpoint, formData, { headers: this.httpHeaders })
+// }
+
+}

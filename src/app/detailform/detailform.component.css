@@ -3,7 +3,21 @@ label {
     display: inline-block;
 }
 
-.container {
-    width: 500px;
+.full_width {
+    width: 100%;
     display: inline-block;
+}
+
+
+
+.detail-form {
+    width: 100%;
+    border-radius: 6px;
+    background-color: #f7f5f5;
+    padding: 60px;
+}
+  
+
+.half_width {
+    width: 50%;
 }

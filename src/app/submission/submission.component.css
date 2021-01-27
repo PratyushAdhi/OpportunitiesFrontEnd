@@ -1,0 +1,9 @@
+table {
+    border-collapse: collapse;
+    border: none;
+}
+
+tr, td {
+    border: none;
+    border-collapse: collapse;
+}

@@ -1,3 +1,19 @@
 table{
     width: 100%;
 }
+
+.tabular {
+    width: 100%;
+    border-radius: 6px;
+    background-color: #f7f5f5;
+    padding: 60px;
+}
+  
+.toggles {
+    width: 100%;
+}
+
+h2 {
+    text-emphasis: bold;
+    text-align: center;
+}

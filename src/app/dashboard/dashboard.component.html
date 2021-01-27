@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    </head>
+    <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        .button {
+            font: bold 20px Arial;
+            text-decoration: none;
+            background-color: #EEEEEE;
+            color: #333333;
+            padding: 2px 6px 2px 6px;
+            border-top: 1px solid #CCCCCC;
+            border-right: 1px solid #333333;
+            border-bottom: 1px solid #333333;
+            border-left: 1px solid #CCCCCC;
+        }
+        </style>        
+    <div class="container">
+      <div>
+        <span style="padding-bottom: 30px;">
+            <h2>Listing Of Opportunities</h2>
+        </span>
+        <span>
+          <a href="/" style="color: blue; margin-left: 1000px; font-size: medium;">Submit New Opportunity</a>
+        </span>
+      </div>
+      <br>
+      <br>
+      <br>
+        <table class="table">
+            <script type="text/javascript">
+              function displayResult()
+              {
+                  var index = document.getElementById("table").rows.length;
+                  var new_row = '<td>'+index+'</td><td>cell 1</td><td>cell 2</td>';
+              }
+            </script>    
+            <thead>
+              <tr>
+                <th style="color: grey; font-size: medium;" scope="col"> <b> Opportunity </b></th>
+                <th style="color: grey; font-size: medium;" scope="col"> <b> Date Of Publishing </b> </th>
+                <th style="color: grey; font-size: medium;" scope="col"> <b> Status </b> </th>
+                <th style="color: grey; font-size: medium;" scope="col"> <b> Result </b> </th>
+                <th style="color: grey; font-size: medium;" scope="col"> </th>
+              </tr>
+            </thead>
+              <tr (click)="onClick(obj.id)" *ngFor="let obj of leads">
+                  <td> <b> <h4 style="color: blue;"> <b> {{obj.title}} </b> </h4> </b> <br> <ng-container *ngIf="obj.status === 'Closed'" style="color: grey; font-size: medium;"> Submission Closed On {{obj.last_date_application}}</ng-container> 
+                  <ng-container *ngIf="obj.status === 'Open'" style="color: grey; font-size: medium;"> Submission Open Till {{obj.last_date_application}}</ng-container></td>
+                  <td style="color: grey"> <h4> {{obj.created_date}} </h4></td>
+                  <td style="color: grey"> <h4> {{obj.status}} </h4></td>
+                  <td [style.color]="obj.result == 'Pending' ? 'red': 'grey'"> <h4> {{obj.result}} </h4></td>
+                  <td style="color: blue;"> <a routerLink='/submission'> <h4> Submissions </h4> </a></td>
+                </tr>
+          </table>
+    </div>
+</html>

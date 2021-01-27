@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { fromEventPattern } from 'rxjs';
-import { Business } from '../business.model';
-import { Language } from '../language.model';
-import { Lead } from '../lead.model';
+import {Router, ActivatedRoute, Params} from '@angular/router';
+import {Lead} from '../lead.model';
+import {Language} from '../language.model';
 import {Genre} from '../genre.model';
-import { LeadsService } from '../leads.service';
+import {Business} from '../business.model';
+import {LeadsService} from '../leads.service';
 
 @Component({
-  selector: 'app-leadform',
-  templateUrl: './leadform.component.html',
-  styleUrls: ['./leadform.component.css']
+  selector: 'app-leadretrieve',
+  templateUrl: './leadretrieve.component.html',
+  styleUrls: ['./leadretrieve.component.css']
 })
-export class LeadformComponent implements OnInit {
-  
+export class LeadretrieveComponent implements OnInit {
+
   partner_types_list = [
     {name: 'Individual', json_name: "individual"},
     {name: 'Business', json_name: "organization"},
@@ -129,10 +129,10 @@ export class LeadformComponent implements OnInit {
 
   college_music_contest = [
     {
-      id: 0, name: "Battle Of Bands (Hindi)", json_name: "band_battle_hindi"
+      id: 0, name: "Battle Of Bands (Hindi)", json_name: "battle_band_hindi"
     },
     {
-      id: 1, name: "Battle Of Bands (English)", json_name: "band_battle_english"
+      id: 1, name: "Battle Of Bands (English)", json_name: "battle_band_english"
     },
     {
       id: 2, name: "Solo Singing Contest", json_name:"solo_singing"
@@ -175,16 +175,23 @@ export class LeadformComponent implements OnInit {
   business_id = [];
   language_id= [];
   genre_id= [];
-
+  id: number;
   is_submitted = false;
 
-  temp_business=""
-  temp_language=""
-  temp_genre=""
+  temp_business= []
+  temp_language= []
+  temp_genre= []
 
-  constructor(private api: LeadsService) { }
+  constructor(private api: LeadsService, private ActivatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.ActivatedRoute.params.subscribe(
+      params => {
+        console.log(params["id"])
+        this.id = params["id"]
+      }
+    )
+    this.getLead(this.id);
   }
 
   addBusiness(): void {
@@ -254,6 +261,41 @@ export class LeadformComponent implements OnInit {
       }
     )
     this.is_submitted = true;
+  }
+
+  getLead = (id: number) => {
+    this.api.getLead(this.id).subscribe(
+      data => {
+        console.log(data);
+        this.lead = data;
+        if(data["language_id"].length > 0){
+          var temp = []
+          for(var i = 0; i < data["language_id"].length; i++){
+            temp.push(data["language_id"][i].name)
+          }
+          this.temp_language = temp;
+        }
+        if(data["genre_id"].length > 0){
+          var gen = []
+          for(var i = 0; i < data["genre_id"].length; i++){
+            gen.push(data["genre_id"][i].name)
+          }
+          this.temp_genre = gen;
+        }
+        if(data["business_id"].length>0){
+          var temp = []
+          for(var i = 0; i < data["business_id"].length; i++){
+            temp.push(data["business_id"][i].name)
+          }
+          this.temp_business = temp;
+        }
+        console.log(data["activity"])
+        this.lead.activity = data["activity"]
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 
 }

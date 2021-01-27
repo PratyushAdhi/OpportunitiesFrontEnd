@@ -1,0 +1,102 @@
+<style>
+    .flex-container {
+      display: flex;
+    }
+    
+    .flex-container > div {
+      padding: 2px;
+      width: 50%;
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+<div>
+    <div class="flex-container">
+        <div style="margin-top: 10px; color: gray">
+            <img src="https://img.apmcdn.org/4f25ecdbbd7af5fed833153302515a94c990de11/uncropped/0a0f13-20130508-favorite-album-covers.jpg" width="100px" height="100px">
+        </div>
+        <div style="margin-top: 10px">
+          <div [ngStyle]="{'color': 'blue'}">
+            <b>Opportunity Name</b>
+          </div>
+          <div style="color: gray;">
+            Submission Closed On 12/12/2020
+          </div>
+          <div style="color: gray;">
+            Status: Open 
+          </div>
+        </div>
+    </div>
+    <div class="flex-container">
+        <div style="color: gray;">
+            Type: Songdew Managed
+            <br>
+            Award Status: {{award_status}}
+            <br>
+            No Of Awards: 1
+            <br>
+        </div>
+    </div>
+    <!-- <mat-card-content>
+        <mat-button-toggle-group name="fontStyle" style="width:100%">
+            <mat-button-toggle style="width:100%" value="company">About Company</mat-button-toggle>
+            <mat-button-toggle style="width:100%" value="opportunity">About Opportunity</mat-button-toggle>
+            <mat-button-toggle style="width:100%" value="opportunity">About Opportunity</mat-button-toggle>
+            <mat-button-toggle style="width:100%" value="opportunity">About Opportunity</mat-button-toggle>
+            <mat-button-toggle style="width:100%" value="opportunity">About Opportunity</mat-button-toggle>
+        </mat-button-toggle-group>
+    </mat-card-content> -->
+    <table class="table" style="padding-top: 50px; margin-top: 50px;">
+        <script type="text/javascript">
+          function displayResult()
+          {
+              var index = document.getElementById("table").rows.length;
+              var new_row = '<td>'+index+'</td><td>cell 1</td><td>cell 2</td>';
+          }
+        </script>    
+        <thead>
+          <tr>
+            <th style="color: grey" scope="col"> All </th>
+            <th style="color: grey" scope="col"> Undecided</th>
+            <th style="color: grey" scope="col"> <i class="fa fa-thumbs-up" aria-hidden="true"> </i></th>
+            <th style="color: grey" scope="col"> <i class="fa fa-thumbs-down" aria-hidden="true"></i> </th>
+            <th style="color: grey" scope="col"> Awards </th>
+          </tr>
+        </thead>    
+        <!-- <tr>
+          <th style="color: grey" scope="col"> S.No </th>
+          <th style="color: grey" scope="col"> Submissions </th>
+          <th style="color: grey" scope="col"> </th>
+          <th style="color: grey" scope="col"> </th>
+          <th style="color: grey" scope="col"> <i class="fa fa-thumbs-up" aria-hidden="true"> </i></th>
+          <th style="color: grey" scope="col"> <i class="fa fa-thumbs-down" aria-hidden="true"></i> </th>
+          <th style="color: grey" scope="col"> Awards </th>
+        </tr> -->
+        <tr>
+          <td style="color: grey" scope="col"> S.No </td>
+          <td style="color: grey" scope="col"> Submissions </td>
+          <td style="color: grey" scope="col"> </td>
+          <td style="color: grey" scope="col"> </td>
+          <td style="color: grey" scope="col"> </td>
+          <td style="color: grey" scope="col"> </td>
+          <td style="color: grey" scope="col"> </td>
+        </tr>
+        <tr></tr>
+        <tr></tr>
+        <tr *ngFor="let obj of leads; let i = index">
+          <td style="color: blue"> {{obj.id}} </td>
+          <td style="color: grey"> <img src="{{obj.image}}" height="100px" width="100px"> </td>
+          <td style="color: grey"> {{obj.title}} <br> {{obj.artist}} <br> <i (click)="openDialog()" style="color: gray;">Contact Info</i> </td>
+          <td style="color: grey"> {{obj.date}} <br> {{obj.time}} </td>
+          <td><i class="fa fa-thumbs-o-up" (click)="thumbColor(obj.id, i)" [style.color]="likedArray[i] ? 'blue' : '' " aria-hidden="true"> </i> </td>
+          <td><i class="fa fa-thumbs-o-down" aria-hidden="true"> </i> </td>
+          <ng-container *ngIf="! likedArray[i]">
+            <td>  <button mat-raised-button disabled>Extend Award</button> </td>
+          </ng-container>
+          <ng-container *ngIf="likedArray[i]">
+            <td> <button mat-raised-button (click)="awardExtend(obj.id, i)" style="color: white;" [style.background-color]="winnerArray[i] ? 'black' : 'blue'" mat-raised-button >Extend Award</button> </td>
+          </ng-container>
+        </tr>
+      </table>
+</div>
